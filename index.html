@@ -715,7 +715,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       adults: parseInt(adults),
       children: parseInt(children),
       roomType,
-      specialRequest: specialRequests,
+      specialRequests,
       createdAt: serverTimestamp()
     });
 
@@ -726,6 +726,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
     alert("Failed to submit booking. Please try again.");
   }
 });
+
 
 
   logoutBtn.addEventListener('click', () => {
