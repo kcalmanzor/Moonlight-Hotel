@@ -686,56 +686,60 @@ const firebaseConfig = {
   measurementId: "G-K1F4PGZN8F"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore(app);
+ const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-document.getElementById("booking-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  const bookingForm = document.getElementById('booking-form');
 
-  const checkIn = document.getElementById("check-in").value;
-  const checkOut = document.getElementById("check-out").value;
-  const adults = document.getElementById("adults").value;
-  const children = document.getElementById("children").value;
-  const roomType = document.getElementById("room-type").value;
-  const specialRequests = document.getElementById("special-requests").value;
+  bookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  const user = auth.currentUser;
-  if (!user) {
-    alert("You must be logged in to book a room.");
-    return;
-  }
+    const checkIn = document.getElementById('check-in').value;
+    const checkOut = document.getElementById('check-out').value;
+    const adults = document.getElementById('adults').value;
+    const children = document.getElementById('children').value;
+    const roomType = document.getElementById('room-type').value;
+    const specialRequests = document.getElementById('special-requests').value;
 
-  try {
-    await addDoc(collection(db, 'bookings'), {
-      userId: user.uid,
-      email: user.email,
-      checkIn,
-      checkOut,
-      adults: parseInt(adults),
-      children: parseInt(children),
-      roomType,
-      specialRequests,
-      createdAt: serverTimestamp()
-    });
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in to book a room.");
+      return;
+    }
 
-    alert("Booking submitted successfully!");
-    e.target.reset();
-  } catch (error) {
-    console.error("Booking error:", error);
-    alert("Failed to submit booking. Please try again.");
-  }
-});
+    try {
+      await addDoc(collection(db, 'bookings'), {
+        userId: user.uid,
+        email: user.email,
+        checkIn,
+        checkOut,
+        adults: parseInt(adults),
+        children: parseInt(children),
+        roomType,
+        specialRequests,
+        createdAt: serverTimestamp()
+      });
 
-
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'index.html';
-    }).catch((error) => {
-      alert("Logout failed: " + error.message);
-    });
+      alert("Booking submitted successfully!");
+      bookingForm.reset();
+    } catch (error) {
+      console.error("Booking error:", error);
+      alert("Failed to submit booking. Please try again.");
+    }
   });
+
+  // Logout Button (Optional)
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Logout failed: " + error.message);
+      });
+    });
+  }
 
   // Handle Booking Form
   const bookingForm = document.getElementById('booking-form');
